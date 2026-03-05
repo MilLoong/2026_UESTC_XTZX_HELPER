@@ -3,8 +3,8 @@ import time
 
 wait = 0.7
 
-# 视频长度, 单位 s, 这里默认 30min
-d = 2000  
+# 视频长度, 单位 s, 这里默认 50min
+d = 3000  
 # 用户 ID
 u = 1145141919810
 # 课程 ID
@@ -130,7 +130,10 @@ for video_offset in range(video_end - video_start):
     # 发包
     try:
         ret = requests.post(url=url, headers=headers, json=data)
-        print(f"Data request status: {ret.status_code}")
+        if ret.status_code == 200:
+            print(f"视频 ID: {v} 观看成功")
     except Exception as e:
         print(f"[Error]: {str(e)}")
     time.sleep(wait)
+
+print("全部视频观看完成, 可刷新网页查看学习进度")
