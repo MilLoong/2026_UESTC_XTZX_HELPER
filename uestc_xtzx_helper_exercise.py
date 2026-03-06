@@ -95,18 +95,18 @@ def pre_post_and_get_answers():
             result = soup.get_text(strip=True)
             print(f'{count}: {result}')
             with open("answers.txt", "w", encoding='utf-8') as f:
-                f.write(f'{count}: {result}')
+                f.write(f'{count}: {result}\n')
             response = requests.post(problem_apply_url, headers=headers, cookies=cookies, json=payload).json()
             if 'detail' in response:
                 if '限速' in response['detail']:
                     print('请求过于频繁, 请调整 wait 的值')
                     with open("answers.txt", "w", encoding='utf-8') as f:
-                        f.write('请求过于频繁, 请调整 wait 的值')
+                        f.write('请求过于频繁, 请调整 wait 的值\n')
                     raise Exception('请求过于频繁')
                 else:
                     print(f'提交失败, 错误信息: {response['detail']}')
                     with open("answers.txt", "w", encoding='utf-8') as f:
-                        f.write(f'提交失败, 错误信息: {response['detail']}')
+                        f.write(f'提交失败, 错误信息: {response['detail']}\n')
                     raise Exception('提交失败')
             answer = None
             if 'error_code' in response:
@@ -114,17 +114,17 @@ def pre_post_and_get_answers():
                     answer = problem['user'][param_to_use]
                     print(f'已做答过, 答案为: {answer}')
                     with open("answers.txt", "w", encoding='utf-8') as f:
-                        f.write(f'已做答过, 答案为: {answer}')
+                        f.write(f'已做答过, 答案为: {answer}\n')
                 else:
                     print(f'提交失败, 错误信息: {response['msg']}')
                     with open("answers.txt", "w", encoding='utf-8') as f:
-                        f.write(f'提交失败, 错误信息: {response['msg']}')
+                        f.write(f'提交失败, 错误信息: {response['msg']}\n')
                     raise Exception('提交失败')
             else:
                 answer = response['data'][param_to_use]
                 print(f'未做答过, 答案为: {answer}')
                 with open("answers.txt", "w", encoding='utf-8') as f:
-                        f.write(f'未做答过, 答案为: {answer}')
+                        f.write(f'未做答过, 答案为: {answer}\n')
             answers[count] = answer
             time.sleep(wait)
         print()
