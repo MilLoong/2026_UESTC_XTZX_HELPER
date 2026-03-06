@@ -128,6 +128,7 @@ def pre_post_and_get_answers():
             answers[count] = answer
             time.sleep(wait)
         print()
+        f.write('\n')
         each['answers'] = answers
 
 def data2json():
