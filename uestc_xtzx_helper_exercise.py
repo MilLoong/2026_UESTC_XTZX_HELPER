@@ -59,6 +59,8 @@ def pre_post_and_get_answers():
         classroom_id = int(cid)
         exercise_id = each['leaf_type_id']
         print(f'章节: \"{each["chapter_name"]}\", 练习: \"{each["exercise_name"]}\"')
+        with open("answers.txt", "w", encoding='utf-8') as f:
+            f.write(f'章节: \"{each["chapter_name"]}\", 练习: \"{each["exercise_name"]}\"\n')
         answers = {}
         for problem in problems:
             problem_id = problem['problem_id']
@@ -92,32 +94,44 @@ def pre_post_and_get_answers():
             soup = BeautifulSoup(body_html, 'html.parser')
             result = soup.get_text(strip=True)
             print(f'{count}: {result}')
+            with open("answers.txt", "w", encoding='utf-8') as f:
+                f.write(f'{count}: {result}')
             response = requests.post(problem_apply_url, headers=headers, cookies=cookies, json=payload).json()
             if 'detail' in response:
                 if '限速' in response['detail']:
                     print('请求过于频繁, 请调整 wait 的值')
+                    with open("answers.txt", "w", encoding='utf-8') as f:
+                        f.write('请求过于频繁, 请调整 wait 的值')
                     raise Exception('请求过于频繁')
                 else:
                     print(f'提交失败, 错误信息: {response['detail']}')
+                    with open("answers.txt", "w", encoding='utf-8') as f:
+                        f.write(f'提交失败, 错误信息: {response['detail']}')
                     raise Exception('提交失败')
             answer = None
             if 'error_code' in response:
                 if response['error_code'] == 80001:
                     answer = problem['user'][param_to_use]
                     print(f'已做答过, 答案为: {answer}')
+                    with open("answers.txt", "w", encoding='utf-8') as f:
+                        f.write(f'已做答过, 答案为: {answer}')
                 else:
                     print(f'提交失败, 错误信息: {response['msg']}')
+                    with open("answers.txt", "w", encoding='utf-8') as f:
+                        f.write(f'提交失败, 错误信息: {response['msg']}')
                     raise Exception('提交失败')
             else:
                 answer = response['data'][param_to_use]
                 print(f'未做答过, 答案为: {answer}')
+                with open("answers.txt", "w", encoding='utf-8') as f:
+                        f.write(f'未做答过, 答案为: {answer}')
             answers[count] = answer
             time.sleep(wait)
         print()
         each['answers'] = answers
 
 def data2json():
-    with open("answer.json", "w", encoding='utf-8') as f:
+    with open("answers.json", "w", encoding='utf-8') as f:
         f.write(json.dumps(data, ensure_ascii=False, indent=4, separators=(',', ':')))
 
 get_exercise_leaf_type_ids()
