@@ -57,7 +57,7 @@
     - 单击它，去到 **负载**，打开 **heartbeat_data**，里面就能找到 **u，c，skuid，cc**，填到 `config.py` 里面就行：
       - ![image-20260306112406744](./image/image-5.png)
 
-  - **sign，cid，video_start，video_end**
+  - **参数：sign，cid，video_start，video_end**
 
     - 进入到 **智能慕课学习空间** 后，**网址** 中即可找到，举个例子：
 
