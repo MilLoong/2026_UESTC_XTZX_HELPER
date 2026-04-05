@@ -5,6 +5,8 @@
 - `uestc_xtzx_helper_video.py`：**刷视频**
 
   - 用到的 **参数**：**d, u, c, skuid, cc, sign, cid, video_start, video_end, headers, cookies**
+  - 旧版支持手动填写参数（仍可用）
+  - 新版支持在 `config.py` 只填 4 个字段自动转换：`curl_bash`、`heartbeat_curl`、`start_video_url`、`end_video_url`
 
 - `uestc_xtzx_helper_exercise.py`：**获取习题答案 (目前没写自动提交)**
 
@@ -14,7 +16,8 @@
 
 - **使用教程**
 
-  找到代码中对应的 **参数** 并填上即可，这里说一下怎么找：
+  找到代码中对应的 **参数** 并填上即可，这里说一下怎么找。  
+  如果你不想手动拆参数，也可以直接把 `curl` 粘贴到 `config.py` 的新字段里（下方每一步都有“简化方式”说明）。
 
   - 打开 **浏览器**，进入 **学习页面**，就是网页 左上角 有以下这个东西的页面：
 
@@ -38,26 +41,28 @@
 
     > **注：**
     >
-    > 1. 如果 网络 这里什么东西都没有的话可以刷新一下网页
+    > 1. 如果 网络 这里什么东西都没有的话可以刷新一下网页（或者直接CTRL + R）
     >
     > 2. 我这里用的 edge 浏览器，理论上浏览器不会影响作用，如果 开发者工具 页面不一样也没事，直接按特定的名字找就行了
 
     - ![image-20260306113457155](./image/image-2.png)
 
-  - **参数：headers，cookies**：
+  - **参数：headers，cookies**（或：简化方式 `curl_bash`）：
 
     - 找到一个 `chapter/cid=xxx/sign=xxx` 的包：
       - ![image-20260306111634624](./image/image-3.png)
     - **右键** 它，选择 **复制 $\rightarrow$ 复制为cURL（bash）**，然后去到这个转换网站 ([在线curl转python工具，爬虫工具 - JSON中文网](https://www.json.cn/curl2python/)) 把 **cURL** 转成 **python**，接着在 右边输出框 把 **headers** 和 **cookies** 填到 `config.py` 即可
+    - 简化方式：把这段 `curl(bash)` 直接粘到 `config.py` 的 `curl_bash` 字段
 
-  - **参数：u，c，skuid，cc**：
+  - **参数：u，c，skuid，cc**（或：简化方式 `heartbeat_curl`）：
 
     - 随便点一个视频 **播放**，在 **网络** 界面等一会，应该会出现一个 **hearbeat** 包：
       - ![image-20260306112240414](./image/image-4.png)
     - 单击它，去到 **负载**，打开 **heartbeat_data**，里面就能找到 **u，c，skuid，cc**，填到 `config.py` 里面就行：
       - ![image-20260306112406744](./image/image-5.png)
+    - 简化方式：右键该 `heartbeat` 请求 **复制为 cURL (bash)**，直接粘到 `config.py` 的 `heartbeat_curl` 字段（会从 `--data-raw` 自动解析）
 
-  - **参数：sign，cid，video_start，video_end**
+  - **参数：sign，cid，video_start，video_end**（或：简化方式 `start_video_url` / `end_video_url`）
 
     - 进入到 **智能慕课学习空间** 后，**网址** 中即可找到，举个例子：
 
@@ -68,3 +73,4 @@
       - **sign**：XXX114514
       - **cid**：114514
       - **video_start，video_end**：1145141919810 即为 **视频 ID**，按需找到 **起始 ID** 和 **结束 ID** 即可
+      - 简化方式：把起始视频页 URL 填到 `start_video_url`，结束视频页 URL 填到 `end_video_url`
