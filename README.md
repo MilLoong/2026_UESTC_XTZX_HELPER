@@ -2,6 +2,13 @@
 **电子科大学堂在线刷课脚本**
 
 > 其实也适用于其他学堂在线的课程
+- `uestc_xtzx_helper.user.js`：**油猴版刷视频**
+
+  - 直接运行在学堂在线页面内
+  - 页面 URL 自动读取 `sign`、`cid`、当前视频 ID
+  - 从一次 `heartbeat` 的 `curl(bash)` 自动提取 `u, c, skuid, cc, d`
+  - 详细用法见 [TAMPERMONKEY.md](/home/saverm/XueTang/2026_UESTC_XTZX_HELPER/TAMPERMONKEY.md)
+
 - `uestc_xtzx_helper_video.py`：**刷视频**
 
   - 用到的 **参数**：**d, u, c, skuid, cc, sign, cid, video_start, video_end, headers, cookies**

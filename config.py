@@ -24,22 +24,60 @@ problem_apply_url = api_url + 'exercise/problem_apply/'
 ''''以下都是可以改的'''
 
 # sleep 的时间, 越长越好, 不然会被限速
-wait = 3
+wait = 5
 
 # ========= 新增：推荐只填这 3 个 =========
 # 1) 复制「chapter/cid=xxx/sign=xxx」请求的 curl(bash)
 curl_bash = r"""
+curl 'https://www.xuetangx.com/api/v1/lms/learn/course/chapter?cid=29592444&sign=EST08091001150' \
+  -H 'accept: application/json, text/plain, */*' \
+  -H 'accept-language: zh' \
+  -H 'app-name: xtzx' \
+  -b '_abfpc=12e227ac7652b65d4f848e2aad48b30ddd32faae_2.0; cna=02ba4cda2f4da84ccbad89497afad134; login_type=WX; csrftoken=xGTokg2VBeaLPrccicLeAiFbuUNdqGOh; sessionid=lpgwtzay6a85gxickqrp1620df3sv9le; mode_type=normal; sensorsdata2015jssdkcross=%7B%22distinct_id%22%3A%2283434117%22%2C%22first_id%22%3A%2219cd5939a781bb1-06e202ab3a8116c-26061c51-2621440-19cd5939a7920ac%22%2C%22props%22%3A%7B%22%24latest_traffic_source_type%22%3A%22%E7%9B%B4%E6%8E%A5%E6%B5%81%E9%87%8F%22%2C%22%24latest_search_keyword%22%3A%22%E6%9C%AA%E5%8F%96%E5%88%B0%E5%80%BC_%E7%9B%B4%E6%8E%A5%E6%89%93%E5%BC%80%22%2C%22%24latest_referrer%22%3A%22%22%7D%2C%22%24device_id%22%3A%2219cd5939a781bb1-06e202ab3a8116c-26061c51-2621440-19cd5939a7920ac%22%7D; provider=xuetang; django_language=zh-cn; k=83434117; point={%22point_active%22:true%2C%22platform_task_active%22:true%2C%22learn_task_active%22:true}; 83434117user_watch_video_seconds=6' \
+  -H 'django-language: zh' \
+  -H 'priority: u=1, i' \
+  -H 'referer: https://www.xuetangx.com/learn/EST08091001150/EST08091001150/29592444/video/75277187?channel=i.area.manual_search' \
+  -H 'sec-ch-ua: "Chromium";v="146", "Not-A.Brand";v="24", "Google Chrome";v="146"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "Windows"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'terminal-type: web' \
+  -H 'user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36' \
+  -H 'x-client: web' \
+  -H 'x-csrftoken: xGTokg2VBeaLPrccicLeAiFbuUNdqGOh' \
+  -H 'xtbz: xt'
 """
 
 # 2) 复制 heartbeat 请求的 curl(bash)，自动解析 json_data
 heartbeat_curl = r"""
+curl 'https://www.xuetangx.com/video-log/heartbeat/' \
+  -H 'accept: */*' \
+  -H 'accept-language: zh-CN,zh;q=0.9' \
+  -H 'content-type: application/json' \
+  -b '_abfpc=12e227ac7652b65d4f848e2aad48b30ddd32faae_2.0; cna=02ba4cda2f4da84ccbad89497afad134; login_type=WX; csrftoken=xGTokg2VBeaLPrccicLeAiFbuUNdqGOh; sessionid=lpgwtzay6a85gxickqrp1620df3sv9le; mode_type=normal; sensorsdata2015jssdkcross=%7B%22distinct_id%22%3A%2283434117%22%2C%22first_id%22%3A%2219cd5939a781bb1-06e202ab3a8116c-26061c51-2621440-19cd5939a7920ac%22%2C%22props%22%3A%7B%22%24latest_traffic_source_type%22%3A%22%E7%9B%B4%E6%8E%A5%E6%B5%81%E9%87%8F%22%2C%22%24latest_search_keyword%22%3A%22%E6%9C%AA%E5%8F%96%E5%88%B0%E5%80%BC_%E7%9B%B4%E6%8E%A5%E6%89%93%E5%BC%80%22%2C%22%24latest_referrer%22%3A%22%22%7D%2C%22%24device_id%22%3A%2219cd5939a781bb1-06e202ab3a8116c-26061c51-2621440-19cd5939a7920ac%22%7D; provider=xuetang; django_language=zh-cn; k=83434117; point={%22point_active%22:true%2C%22platform_task_active%22:true%2C%22learn_task_active%22:true}; 83434117user_watch_video_seconds=6' \
+  -H 'origin: https://www.xuetangx.com' \
+  -H 'priority: u=1, i' \
+  -H 'referer: https://www.xuetangx.com/learn/EST08091001150/EST08091001150/29592444/video/75277187?channel=i.area.manual_search' \
+  -H 'sec-ch-ua: "Chromium";v="146", "Not-A.Brand";v="24", "Google Chrome";v="146"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "Windows"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36' \
+  -H 'x-csrftoken: xGTokg2VBeaLPrccicLeAiFbuUNdqGOh' \
+  -H 'x-requested-with: XMLHttpRequest' \
+  -H 'xtbz: xt' \
+  --data-raw '{"heart_data":[{"i":5,"et":"loadstart","p":"web","n":"ali-cdn.xuetangx.com","lob":"plat2","cp":0,"fp":0,"tp":0,"sp":2,"ts":"1775398523577","u":83434117,"uip":"","c":680910,"v":75277187,"skuid":14925774,"classroomid":"29592444","cc":"1DE80D3A9262744C9C33DC5901307461","d":0,"pg":"75277187_v65n","sq":1,"t":"video","cards_id":0,"slide":0,"v_url":""},{"i":5,"et":"seeking","p":"web","n":"ali-cdn.xuetangx.com","lob":"plat2","cp":16,"fp":0,"tp":16,"sp":2,"ts":"1775398523981","u":83434117,"uip":"","c":680910,"v":75277187,"skuid":14925774,"classroomid":"29592444","cc":"1DE80D3A9262744C9C33DC5901307461","d":869.6,"pg":"75277187_v65n","sq":2,"t":"video","cards_id":0,"slide":0,"v_url":""},{"i":5,"et":"loadeddata","p":"web","n":"ali-cdn.xuetangx.com","lob":"plat2","cp":16,"fp":0,"tp":16,"sp":2,"ts":"1775398524304","u":83434117,"uip":"","c":680910,"v":75277187,"skuid":14925774,"classroomid":"29592444","cc":"1DE80D3A9262744C9C33DC5901307461","d":869.6,"pg":"75277187_v65n","sq":3,"t":"video","cards_id":0,"slide":0,"v_url":""},{"i":5,"et":"ratechange","p":"web","n":"ali-cdn.xuetangx.com","lob":"plat2","cp":16,"fp":0,"tp":16,"sp":2,"ts":"1775398528477","u":83434117,"uip":"","c":680910,"v":75277187,"skuid":14925774,"classroomid":"29592444","cc":"1DE80D3A9262744C9C33DC5901307461","d":869.6,"pg":"75277187_v65n","sq":4,"t":"video","cards_id":0,"slide":0,"v_url":""},{"i":5,"et":"ratechange","p":"web","n":"ali-cdn.xuetangx.com","lob":"plat2","cp":16,"fp":0,"tp":16,"sp":2,"ts":"1775398529476","u":83434117,"uip":"","c":680910,"v":75277187,"skuid":14925774,"classroomid":"29592444","cc":"1DE80D3A9262744C9C33DC5901307461","d":869.6,"pg":"75277187_v65n","sq":5,"t":"video","cards_id":0,"slide":0,"v_url":""},{"i":5,"et":"ratechange","p":"web","n":"ali-cdn.xuetangx.com","lob":"plat2","cp":16,"fp":0,"tp":16,"sp":2,"ts":"1775398531557","u":83434117,"uip":"","c":680910,"v":75277187,"skuid":14925774,"classroomid":"29592444","cc":"1DE80D3A9262744C9C33DC5901307461","d":869.6,"pg":"75277187_v65n","sq":6,"t":"video","cards_id":0,"slide":0,"v_url":""},{"i":5,"et":"ratechange","p":"web","n":"ali-cdn.xuetangx.com","lob":"plat2","cp":16,"fp":0,"tp":16,"sp":2,"ts":"1775398532304","u":83434117,"uip":"","c":680910,"v":75277187,"skuid":14925774,"classroomid":"29592444","cc":"1DE80D3A9262744C9C33DC5901307461","d":869.6,"pg":"75277187_v65n","sq":7,"t":"video","cards_id":0,"slide":0,"v_url":""},{"i":5,"et":"ratechange","p":"web","n":"ali-cdn.xuetangx.com","lob":"plat2","cp":16,"fp":0,"tp":16,"sp":2,"ts":"1775398534477","u":83434117,"uip":"","c":680910,"v":75277187,"skuid":14925774,"classroomid":"29592444","cc":"1DE80D3A9262744C9C33DC5901307461","d":869.6,"pg":"75277187_v65n","sq":8,"t":"video","cards_id":0,"slide":0,"v_url":""},{"i":5,"et":"ratechange","p":"web","n":"ali-cdn.xuetangx.com","lob":"plat2","cp":16,"fp":0,"tp":16,"sp":2,"ts":"1775398535316","u":83434117,"uip":"","c":680910,"v":75277187,"skuid":14925774,"classroomid":"29592444","cc":"1DE80D3A9262744C9C33DC5901307461","d":869.6,"pg":"75277187_v65n","sq":9,"t":"video","cards_id":0,"slide":0,"v_url":""},{"i":5,"et":"ratechange","p":"web","n":"ali-cdn.xuetangx.com","lob":"plat2","cp":16,"fp":0,"tp":16,"sp":2,"ts":"1775398537477","u":83434117,"uip":"","c":680910,"v":75277187,"skuid":14925774,"classroomid":"29592444","cc":"1DE80D3A9262744C9C33DC5901307461","d":869.6,"pg":"75277187_v65n","sq":10,"t":"video","cards_id":0,"slide":0,"v_url":""},{"i":5,"et":"ratechange","p":"web","n":"ali-cdn.xuetangx.com","lob":"plat2","cp":16,"fp":0,"tp":16,"sp":2,"ts":"1775398538305","u":83434117,"uip":"","c":680910,"v":75277187,"skuid":14925774,"classroomid":"29592444","cc":"1DE80D3A9262744C9C33DC5901307461","d":869.6,"pg":"75277187_v65n","sq":11,"t":"video","cards_id":0,"slide":0,"v_url":""},{"i":5,"et":"ratechange","p":"web","n":"ali-cdn.xuetangx.com","lob":"plat2","cp":16,"fp":0,"tp":16,"sp":2,"ts":"1775398540480","u":83434117,"uip":"","c":680910,"v":75277187,"skuid":14925774,"classroomid":"29592444","cc":"1DE80D3A9262744C9C33DC5901307461","d":869.6,"pg":"75277187_v65n","sq":12,"t":"video","cards_id":0,"slide":0,"v_url":""}]}'
 """
 
 # 3) 起始视频 URL（例如：https://www.xuetangx.com/learn/space/xxx/xxx/123/video/987654）
-start_video_url = ''
+start_video_url = 'https://www.xuetangx.com/learn/EST08091001150/EST08091001150/29592444/video/75277234?channel=i.area.manual_search'
 
 # 4) 结束视频 URL（例如：https://www.xuetangx.com/learn/space/xxx/xxx/123/video/987999）
-end_video_url = ''
+end_video_url = 'https://www.xuetangx.com/learn/EST08091001150/EST08091001150/29592444/video/75277333?channel=i.area.manual_search'
 
 # ========= 兼容：老参数仍可手填 =========
 # 最长的视频长度, 可以大于, 单位 s, 这里默认 50min
