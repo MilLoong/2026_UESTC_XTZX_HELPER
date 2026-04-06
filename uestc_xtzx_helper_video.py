@@ -2,24 +2,30 @@ from config import *
 import requests
 import time
 
-for video_offset in range(video_end - video_start + 1):
-    # 更新 headers
-    v = video_start + video_offset
-    d += 1
+base_duration = max(int(d), 1)
 
-    headers['Referer'] = new_url + f'/{sign}/{sign}/{cid}/video/{v}'
+for video_offset in range(video_end - video_start + 1):
+    v = video_start + video_offset
+    video_duration = base_duration
+
+    # 每个视频使用独立 headers，避免遗留旧 referer
+    req_headers = dict(headers)
+    req_headers.pop('referer', None)
+    req_headers['Referer'] = new_url + f'/{sign}/{sign}/{cid}/video/{v}'
+    ts_start = int(time.time() * 1000)
 
     # 生成发出的 JSON
     heart_data = []
-    for i in range(d // 5):
+    for i in range(video_duration // 5):
+        cp = i * 5
         # 构造 heartbeat 数据
         heart_data.append({
             "c": c,
             "cards_id": 0,
             "cc": cc,
             "classroomid": cid,
-            "cp": i * 5,
-            "d": d,
+            "cp": cp,
+            "d": video_duration,
             "et": "heartbeat",
             "fp": 0,
             "i": 5,
@@ -32,8 +38,8 @@ for video_offset in range(video_end - video_start + 1):
             "sp": 1,
             "sq": 1 + i,
             "t": "video",
-            "tp": 1,
-            "ts": str(1678360614546 + i * 5000),
+            "tp": cp,
+            "ts": str(ts_start + i * 5000),
             "u": u,
             "uip": "",
             "v": v,
@@ -46,8 +52,8 @@ for video_offset in range(video_end - video_start + 1):
         "cards_id": 0,
         "cc": cc,
         "classroomid": cid,
-        "cp": d // 5 * 5 + 5,
-        "d": d,
+        "cp": video_duration,
+        "d": video_duration,
         "et": "videoend",
         "fp": 0,
         "i": 5,
@@ -58,10 +64,10 @@ for video_offset in range(video_end - video_start + 1):
         "skuid": skuid,
         "slide": 0,
         "sp": 1,
-        "sq": 2 + d // 5,
+        "sq": 2 + video_duration // 5,
         "t": "video",
-        "tp": 1,
-        "ts": str(1678360614546 + d // 5 * 5000 + 5000),
+        "tp": video_duration,
+        "ts": str(ts_start + (video_duration // 5 + 1) * 5000),
         "u": u,
         "uip": "",
         "v": v,
@@ -73,9 +79,11 @@ for video_offset in range(video_end - video_start + 1):
 
     # 发包
     try:
-        ret = requests.post(url=heartbeat_url, headers=headers, cookies=cookies, json=data)
+        ret = requests.post(url=heartbeat_url, headers=req_headers, cookies=cookies, json=data)
         if ret.status_code == 200:
             print(f"视频 ID: {v} 观看成功")
+        else:
+            print(f"视频 ID: {v} 返回码: {ret.status_code}，响应: {ret.text[:200]}")
     except Exception as e:
         print(f"发送失败: {str(e)}")
     time.sleep(wait)

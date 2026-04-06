@@ -24,7 +24,7 @@ def _parse_cookie_string(cookie_text):
 def parse_curl_bash(curl_bash_text):
     """Parse browser copied curl(bash) text to url/headers/cookies/data."""
     if not curl_bash_text or not curl_bash_text.strip():
-        return {}, {}, None
+        return {}, {}, None, None
 
     normalized = (
         curl_bash_text
@@ -36,10 +36,10 @@ def parse_curl_bash(curl_bash_text):
     try:
         tokens = shlex.split(normalized, posix=True)
     except ValueError:
-        return {}, {}, None
+        return {}, {}, None, None
 
     if not tokens or tokens[0] != 'curl':
-        return {}, {}, None
+        return {}, {}, None, None
 
     headers = {}
     cookies = {}
@@ -135,13 +135,18 @@ def parse_heartbeat_payload(payload):
             return {}
 
     event = None
+    events = None
     if isinstance(obj, dict):
         if 'heart_data' in obj and isinstance(obj['heart_data'], list) and obj['heart_data']:
-            event = obj['heart_data'][0]
+            events = [x for x in obj['heart_data'] if isinstance(x, dict)]
+            if events:
+                event = events[0]
         else:
             event = obj
     elif isinstance(obj, list) and obj:
-        event = obj[0]
+        events = [x for x in obj if isinstance(x, dict)]
+        if events:
+            event = events[0]
 
     if not isinstance(event, dict):
         return {}
@@ -150,6 +155,19 @@ def parse_heartbeat_payload(payload):
     for key in ('d', 'u', 'c', 'skuid', 'cc', 'classroomid'):
         if key in event:
             result[key] = event[key]
+
+    # heart_data 往往包含多条事件，首条可能是 loadstart 且 d=0。
+    # 这里提取最大 d，避免把默认时长错误识别为 0。
+    if events:
+        d_values = []
+        for item in events:
+            val = item.get('d')
+            try:
+                d_values.append(float(val))
+            except (TypeError, ValueError):
+                continue
+        if d_values:
+            result['d'] = max(d_values)
 
     return result
 
@@ -214,7 +232,13 @@ def build_runtime_config(
     if hb_cookies:
         cookies = hb_cookies
     if 'd' in hb:
-        d = int(hb['d'])
+        # heartbeat 样本通常来自某一个视频，时长可能偏小；
+        # 保留默认 d 作为下限，避免长视频只推进一部分进度。
+        try:
+            parsed_d = int(float(hb['d']))
+            d = max(d, parsed_d)
+        except (TypeError, ValueError):
+            pass
     if 'u' in hb:
         u = int(hb['u'])
     if 'c' in hb:
